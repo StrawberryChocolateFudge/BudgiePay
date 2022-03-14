@@ -7,40 +7,40 @@ body > nav {
   left: 0;
   backdrop-filter: saturate(180%) blur(20px);
   background-color: var(--nav-background);
-  box-shadow: 0px 1px 0 var(--nav-border)
+  box-shadow: 0px 1px 0 var(--nav-border);
 }
 
 body > nav + * {
-  padding-top: calc(1rem * var(--spacing-factor-xs) + 3.5rem)
+  padding-top: calc(1rem * var(--spacing-factor-xs) + 3.5rem);
 }
 
 @media (min-width: 576px) {
   body > nav + * {
-    padding-top: calc(1rem * var(--spacing-factor-sm) + 3.5rem)
+    padding-top: calc(1rem * var(--spacing-factor-sm) + 3.5rem);
   }
 }
 
 @media (min-width: 768px) {
   body > nav + * {
-    padding-top: calc(1rem * var(--spacing-factor-md) + 3.5rem)
+    padding-top: calc(1rem * var(--spacing-factor-md) + 3.5rem);
   }
 }
 
 @media (min-width: 992px) {
   body > nav + * {
-    padding-top: calc(1rem * var(--spacing-factor-lg) + 3.5rem)
+    padding-top: calc(1rem * var(--spacing-factor-lg) + 3.5rem);
   }
 }
 
 @media (min-width: 1200px) {
   body > nav + * {
-    padding-top: calc(1rem * var(--spacing-factor-xl) + 3.5rem)
+    padding-top: calc(1rem * var(--spacing-factor-xl) + 3.5rem);
   }
 }
 
 .hero {
   background-color: #394046;
-  background-image: url("/images/hero.jpg");
+  /* background-image: url("/images/hero.jpg"); */
   background-position: center;
   background-size: cover;
 }
@@ -52,10 +52,14 @@ body > nav + * {
   padding: var(--spacing) 0;
 }
 
-.hero hgroup>:last-child {
+.hero hgroup > :last-child {
   color: var(--h3);
 }
 
 .hero hgroup {
   margin-bottom: var(--spacing);
+}
+
+.text-align-center {
+  text-align: center;
 }
