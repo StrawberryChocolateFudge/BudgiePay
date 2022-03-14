@@ -1,9 +1,7 @@
-var passport = require('passport');
-var Strategy = require('passport-twitter');
+var passport = require("passport");
+var Strategy = require("passport-twitter");
 
-
-module.exports = function() {
-  
+module.exports = function () {
   /*
   var trustProxy = false;
   if (process.env.DYNO) {
@@ -11,7 +9,7 @@ module.exports = function() {
     trustProxy = true;
   }
   */
-  
+
   // Configure the Twitter strategy for use by Passport.
   //
   // OAuth 1.0-based strategies require a `verify` function which receives the
@@ -19,21 +17,26 @@ module.exports = function() {
   // user's behalf, along with the user's profile.  The function must invoke `cb`
   // with a user object, which will be set at `req.user` in route handlers after
   // authentication.
-  passport.use(new Strategy({
-      consumerKey: process.env['TWITTER_CONSUMER_KEY'],
-      consumerSecret: process.env['TWITTER_CONSUMER_SECRET'],
-      callbackURL: '/oauth/callback/twitter.com',
-      //proxy: trustProxy
-    },
-    function(token, tokenSecret, profile, cb) {
-      // In this example, the user's Twitter profile is supplied as the user
-      // record.  In a production-quality application, the Twitter profile should
-      // be associated with a user record in the application's database, which
-      // allows for account linking and authentication with other identity
-      // providers.
-      return cb(null, profile);
-    }));
-    
+
+  passport.use(
+    new Strategy(
+      {
+        consumerKey: process.env["TWITTER_CONSUMER_KEY"],
+        consumerSecret: process.env["TWITTER_CONSUMER_SECRET"],
+        callbackURL: "/oauth/callback/twitter.com",
+        //proxy: trustProxy
+      },
+      function (token, tokenSecret, profile, cb) {
+        // In this example, the user's Twitter profile is supplied as the user
+        // record.  In a production-quality application, the Twitter profile should
+        // be associated with a user record in the application's database, which
+        // allows for account linking and authentication with other identity
+        // providers.
+        return cb(null, profile);
+      }
+    )
+  );
+
   // Configure Passport authenticated session persistence.
   //
   // In order to restore authentication state across HTTP requests, Passport needs
@@ -43,12 +46,11 @@ module.exports = function() {
   // from the database when deserializing.  However, due to the fact that this
   // example does not have a database, the complete Facebook profile is serialized
   // and deserialized.
-  passport.serializeUser(function(user, cb) {
+  passport.serializeUser(function (user, cb) {
     cb(null, user);
   });
 
-  passport.deserializeUser(function(obj, cb) {
+  passport.deserializeUser(function (obj, cb) {
     cb(null, obj);
   });
-  
 };
