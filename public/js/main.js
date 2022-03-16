@@ -13,6 +13,7 @@ if (withdrawBttn !== null) {
         return;
       }
       await requestAccounts();
+      await switchToBSC("Testnet");
       const address = await getAddress();
       window.location.href = window.location.href + "?address=" + address;
       // now refresh the page with the address
@@ -134,5 +135,17 @@ async function switchToBSC(type) {
         },
       ],
     });
+  }
+}
+
+async function switch_to_Chain(chainId) {
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId }],
+    });
+    return true;
+  } catch (err) {
+    return false;
   }
 }
