@@ -3,7 +3,7 @@ const abi = require("ethereumjs-abi");
 
 const chainId = 31337;
 
-function sign(twitterId, followers, authorizedAddress) {
+function signAirdrop(twitterId, followers, authorizedAddress) {
   const domainTypeHash = ethUtil.keccak256(
     "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
   );
@@ -53,4 +53,4 @@ function sign(twitterId, followers, authorizedAddress) {
   return [sig, address];
 }
 
-module.exports = { sign };
+module.exports = { signAirdrop };
