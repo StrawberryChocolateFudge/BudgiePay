@@ -24,7 +24,6 @@ router.get(
         if (err) {
           return next(err);
         }
-        console.log(req.federatedUser);
         if (!row) {
           db.run(
             "INSERT INTO users (name) VALUES (?)",
