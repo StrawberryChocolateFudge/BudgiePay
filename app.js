@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // data.  If session data contains a logged in user, the user is set at
 // `req.user`.
 app.use(
-  require("express-session")({
+  require("cookie-session")({
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: false,
