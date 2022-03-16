@@ -7,7 +7,7 @@ const router = express.Router();
 
 const web3 = require("../web3/web3");
 const getWithdrawnAlready = web3.getWithdrawnAlready;
-const { fetchfollowers, fetchTweets } = require("../fetch/fetch");
+const { fetchfollowers } = require("../fetch/fetch");
 const { signAirdrop } = require("../web3/sign");
 
 /* GET airdrop. */
@@ -23,11 +23,6 @@ router.get("/", ensureLoggedIn(), async function (req, res, next) {
         return next(err);
       }
       try {
-        // Fetch the latest tweets of the user
-        const tweets = await fetchTweets(row.subject);
-        console.log("fetching tweets");
-        console.log(tweets.data);
-        //TODO: GET THE TWEETS AND DISPLAY THEM!!
         const withdrawn = await getWithdrawnAlready(row.subject);
         let followerscount;
 
