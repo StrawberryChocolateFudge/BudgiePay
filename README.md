@@ -22,6 +22,16 @@ certificates were installed with
 
 This autoconfigure the ssl certificate
 
+uses PM2
+
+    npm install -g pm2
+
+    pm2 startup systemd
+
+switch to another user, not root
+
+    pm2 start bin/www -i max
+
 ## Overview
 
 This example illustrates how to use [Passport](https://www.passportjs.org) and
