@@ -32,6 +32,8 @@ switch to another user, not root
 
     pm2 start bin/www -i max
 
+Use MC to change the permissions of db.sqlite
+
 ## Overview
 
 This example illustrates how to use [Passport](https://www.passportjs.org) and
