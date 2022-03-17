@@ -34,6 +34,10 @@ switch to another user, not root
 
 Use MC to change the permissions of db.sqlite
 
+## NETWORK SETTINGS
+
+When deploying to new networks, the CHAINID needs to be set.
+
 ## Overview
 
 This example illustrates how to use [Passport](https://www.passportjs.org) and
