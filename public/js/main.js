@@ -68,7 +68,6 @@ async function verifySignature(
 ) {
   const web3 = new Web3(window.ethereum);
   const contract = new web3.eth.Contract(abi, contractaddress);
-  console.log(signedargs);
   const res = await contract.methods
     .verifySignature(
       signature.v,
@@ -79,8 +78,7 @@ async function verifySignature(
       signedargs.address
     )
     .call({ from: address });
-
-  console.log(res);
+  return res;
 }
 
 async function mintFollowerToken(
