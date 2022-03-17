@@ -1,5 +1,5 @@
 [Service]
-ExecStart=/usr/bin/node /home/follower/TheFollowerTokenz/app.js
+ExecStart=/usr/bin/node /home/follower/TheFollowerToken/app.js
 Restart=always
 StandardOutput=syslog
 StandardError=syslog
