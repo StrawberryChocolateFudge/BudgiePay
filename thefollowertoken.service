@@ -1,0 +1,11 @@
+[Service]
+ExecStart=/usr/bin/node /home/follower/TheFollowerTokenz/app.js
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=node-app-1
+User=follower
+Group=follower
+
+[Install]
+WantedBy=multi-user.target
