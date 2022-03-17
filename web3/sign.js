@@ -1,7 +1,7 @@
 const ethUtil = require("ethereumjs-util");
 const abi = require("ethereumjs-abi");
 
-const chainId = 31337;
+const chainId = process.env["CHAINID"];
 
 function signAirdrop(twitterId, followers, authorizedAddress) {
   const domainTypeHash = ethUtil.keccak256(
