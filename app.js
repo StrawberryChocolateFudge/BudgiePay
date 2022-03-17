@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // `req.user`.
 app.use(
   require("cookie-session")({
-    secret: "keyboard cat",
+    secret: process.env["COOKIESESSIONSECRET"],
     resave: false,
     saveUninitialized: false,
   })
