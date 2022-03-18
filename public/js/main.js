@@ -1,5 +1,3 @@
-const THEFOLLOWERTOKENADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-
 const withdrawBttn = document.getElementById("withdrawButton");
 
 if (withdrawBttn !== null) {
@@ -114,18 +112,18 @@ const addTokensToWallet = document.getElementById("add-tokens-to-wallet");
 
 if (addTokensToWallet !== null) {
   addTokensToWallet.onclick = async function () {
-    await watchAsset();
+    await watchAsset(contractaddress);
   };
 }
 
-async function watchAsset() {
+async function watchAsset(theFollowerTokenAddress) {
   await window.ethereum
     .request({
       method: "wallet_watchAsset",
       params: {
         type: "ERC20",
         options: {
-          address: THEFOLLOWERTOKENADDRESS,
+          address: theFollowerTokenAddress,
           symbol: "TFT",
           decimals: 18,
         },
