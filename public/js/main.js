@@ -112,7 +112,9 @@ const addTokensToWallet = document.getElementById("add-tokens-to-wallet");
 
 if (addTokensToWallet !== null) {
   addTokensToWallet.onclick = async function () {
-    await watchAsset(contractaddress);
+    const theFollowerTokenAddress =
+      addTokensToWallet.dataset.thefollowertokenaddress;
+    await watchAsset(theFollowerTokenAddress);
   };
 }
 
