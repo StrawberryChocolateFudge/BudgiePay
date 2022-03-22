@@ -9,28 +9,6 @@
     <link rel="stylesheet" href="/stylesheets/pico.css" />
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <title>Airdrop</title>
-    <style>
-      :root:not([data-theme="dark"]),
-      [data-theme="light"] {
-        --nav-background: rgba(255, 255, 255, 0.7);
-        --nav-border: rgba(115, 130, 140, 0.2);
-      }
-
-      [data-theme="dark"] {
-        --nav-background: rgba(16, 24, 30, 0.8);
-        --nav-border: rgba(115, 130, 140, 0.2);
-      }
-
-      main .grid > * {
-        margin-bottom: var(--spacing);
-      }
-      @media (min-width: 992px) {
-        main .grid {
-          grid-column-gap: var(--spacing);
-          grid-template-columns: 25% auto;
-        }
-      }
-    </style>
   </head>
 
   <body>
@@ -47,10 +25,10 @@
         <div>
           <% if (withdrawn) { %>
           <h5 class="text-align-center">
-            You have withdrawn your tokens! Thank you for Joining the DAO.
+            You have withdrawn your tokens! Thank you for Joining!
           </h5>
           <button
-            data-thefollowertokenaddress="<%=thefollowertokenaddress%>"
+            data-budgiecoinaddress="<%=budgiecoinaddress%>"
             id="add-tokens-to-wallet"
             class="airdropButton"
           >
@@ -59,10 +37,11 @@
           <%} else { %>
           <hgroup class="text-align-center">
             <h4>You have <%=followerscount %> Followers !</h4>
+            <h4>Claim your Budgie Coins!</h4>
           </hgroup>
 
           <button
-            data-thefollowertokenaddress="<%=thefollowertokenaddress%>"
+            data-budgiecoinaddress="<%=budgiecoinaddress%>"
             data-signedargs="<%=signedargs%>"
             data-walletconnected="<%=walletconnected%>"
             data-signature="<%=signature%>"
@@ -76,6 +55,7 @@
       </div>
     </main>
   </body>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+  <script src=/js/web3.min.js"></script>
   <script src="/js/main.js"></script>
+  <script src="/js/airdrop.js"></script>
 </html>
