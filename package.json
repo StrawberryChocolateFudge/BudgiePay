@@ -1,7 +1,7 @@
 {
-  "name": "thefollowertoken",
+  "name": "budgiepay",
   "version": "0.0.0",
-  "description": "The Follower Token",
+  "description": "Budgie Pay",
   "keywords": [
     "example",
     "express",
@@ -32,6 +32,7 @@
     "ethereumjs-abi": "^0.6.8",
     "ethereumjs-util": "^6.2.1",
     "express": "^4.17.1",
+    "helmet": "^5.0.2",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-twitter": "^1.0.4",
