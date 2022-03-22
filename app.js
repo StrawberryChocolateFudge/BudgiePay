@@ -1,23 +1,22 @@
-require("dotenv").config();
+const express = require("express");
+const passport = require("passport");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 
-var express = require("express");
-var passport = require("passport");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-
-var indexRouter = require("./routes/index");
-var authRouter = require("./routes/auth");
-var airdropRouter = require("./routes/airdrop");
-
-var app = express();
-
+const indexRouter = require("./routes/index");
+const authRouter = require("./routes/auth");
+const airdropRouter = require("./routes/airdrop");
+const oneRouter = require("./routes/one");
+const helmet = require("helmet");
+const app = express();
 require("./boot/db")();
 require("./boot/auth")();
 
 // Configure view engine to render EJS templates.
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
+app.use(helmet());
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -44,5 +43,5 @@ app.use(passport.session());
 app.use("/", indexRouter);
 app.use("/", authRouter);
 app.use("/airdrop", airdropRouter);
-
+app.use("/one", oneRouter);
 module.exports = app;
