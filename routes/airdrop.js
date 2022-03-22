@@ -24,10 +24,8 @@ router.get("/", ensureLoggedIn(), async function (req, res, next) {
       }
       try {
         const withdrawn = await getWithdrawnAlready(row.subject);
-        let followerscount;
-
         const response = await fetchfollowers(row.subject);
-        followerscount = response.data.followers_count;
+        let followerscount = response.data.followers_count;
 
         let buttonMessage;
         let signature = "";
@@ -38,17 +36,24 @@ router.get("/", ensureLoggedIn(), async function (req, res, next) {
         } else {
           address = req.query.address;
           buttonMessage = `Withdraw ${followerscount} tokens`;
-          signature = signAirdrop(row.subject, followerscount, address);
+          signature = signAirdrop(
+            row.subject,
+            followerscount,
+            address,
+            process.env["CHAINID"],
+            process.env["TOKENADDRESS"],
+            process.env["PRIVATEKEY"]
+          );
           signature = {
-            r: ethUtil.bufferToHex(signature[0].r),
-            s: ethUtil.bufferToHex(signature[0].s),
-            v: signature[0].v,
+            r: ethUtil.bufferToHex(signature.r),
+            s: ethUtil.bufferToHex(signature.s),
+            v: signature.v,
           };
           walletconnected = true;
         }
         res.render("airdrop", {
           user: req.user,
-          thefollowertokenaddress: process.env["CONTRACTADDRESS"],
+          budgiecoinaddress: process.env["TOKENADDRESS"],
           withdrawn,
           followerscount,
           walletconnected,
