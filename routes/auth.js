@@ -1,7 +1,8 @@
 const express = require("express");
 const passport = require("passport");
 const db = require("../db");
-
+const web3 = require("../web3/web3");
+const getWithdrawnAlready = web3.getWithdrawnAlready;
 const router = express.Router();
 
 router.get("/login", function (req, res, next) {
@@ -45,11 +46,19 @@ router.get(
                     id: id.toString(),
                     displayName: req.federatedUser.displayName,
                   };
-                  req.login(user, function (err) {
+                  req.login(user, async function (err) {
                     if (err) {
                       return next(err);
                     }
-                    res.redirect("/airdrop");
+                    // if the user already claimed the tokens, redirect to /ONE
+                    const withdrawn = await getWithdrawnAlready(
+                      req.federatedUser.id
+                    );
+                    if (withdrawn) {
+                      res.redirect("/one");
+                    } else {
+                      res.redirect("/airdrop");
+                    }
                   });
                 }
               );
@@ -73,11 +82,26 @@ router.get(
                 username: row.username,
                 displayName: row.name,
               };
-              req.login(user, function (err) {
+              req.login(user, async function (err) {
                 if (err) {
                   return next(err);
                 }
-                res.redirect("/airdrop");
+                db.get(
+                  "SELECT * from federated_credentials WHERE user_id = ?",
+                  [row.id],
+                  async function (err, row) {
+                    if (err) {
+                      return next(err);
+                    }
+                    // if the user already claimed the tokens, redirect to /ONE
+                    const withdrawn = await getWithdrawnAlready(row.subject);
+                    if (withdrawn) {
+                      res.redirect("/one");
+                    } else {
+                      res.redirect("/airdrop");
+                    }
+                  }
+                );
               });
             }
           );
