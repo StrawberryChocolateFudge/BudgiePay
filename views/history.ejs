@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/stylesheets/pico.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>History</title>
+  </head>
+  <body>
+    <%- include('header'); -%>
+
+    <main
+      id="history"
+      data-twitterid="<%=twitterId %>"
+      data-paymentcontractaddress="<%=paymentcontractaddress %>"
+      data-currency="ONE"
+    >
+      <hgroup>
+        <h3 class="text-align-center">History</h3>
+      </hgroup>
+      <details id="recieved-details">
+        <summary id="recieved-summary">
+          Recieved <span id="recieved-count"></span>
+        </summary>
+        <div id="recieved-details-content"></div>
+      </details>
+      <details id="sent-details">
+        <summary id="sent-summary">Sent <span id="sent-count"></span></summary>
+        <div id="sent-details-content"></div>
+      </details>
+    </main>
+  </body>
+  <script src="/js/web3.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/history.js"></script>
+</html>
