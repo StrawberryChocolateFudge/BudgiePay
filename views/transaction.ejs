@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/stylesheets/pico.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>Transaction</title>
+  </head>
+  <body>
+    <%- include('header'); -%>
+
+    <main
+      id="transaction-main"
+      data-chain="<%=chain %>"
+      data-chainid="<%=chainid %>"
+      data-paymentcontractaddress="<%=paymentcontractaddress %>"
+      data-id="<%=id %>"
+      data-userid="<%=userid %>"
+    >
+      <hgroup class="text-align-center">
+        <h4 class="text-align-center">Transaction</h4>
+      </hgroup>
+      <% if (invalid) { %>
+      <article><p class="text-align-center">Not Found</p></article>
+      <%} else { %> <% if (finished) {%>
+      <article><p><%=finishedMessage %></p></article>
+      <%} else {%>
+      <article>
+        <p class="text-align-center"><%=amount %> <%=currency %></p>
+        <% if (refund) { %>
+        <button id="refund-button" class="max-width-200 center">Refund</button>
+        <% } %> <% if (withdraw) { %>
+        <button id="withdraw-button" class="max-width-200 center">
+          Withdraw
+        </button>
+        <% } %>
+      </article>
+      <% } %> <% } %>
+    </main>
+  </body>
+  <script src="/js/web3.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/transaction.js"></script>
+</html>
