@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/stylesheets/pico.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>Payments</title>
+  </head>
+  <style></style>
+  <body>
+    <%- include('header'); -%>
+
+    <main class="container">
+      <hgroup class="text-align-center">
+        <h3 class="text-align-center">Make Payment using Harmony One</h3>
+        <hr />
+      </hgroup>
+
+      <form
+        id="payForm"
+        data-chain="HARMONY"
+        data-contractaddress="<%= contractaddress %>"
+      >
+        <label for="twitterHandle" class="text-align-center"
+          >Transfer to Twitter Handle:</label
+        >
+        <input
+          placeholder="@"
+          id="twitterHandle"
+          class="max-width-300 center"
+          type="text"
+          required
+          name="twitterHandle"
+        />
+        <label for="payamount" class="text-align-center"
+          >Transfer Amount:
+        </label>
+        <input
+          placeholder="ONE"
+          id="payamount"
+          class="max-width-300 center"
+          type="number"
+          name="amount"
+          required
+        />
+        <slot id="errorSlot"></slot>
+        <button type="submit" class="max-width-300 center">PAY</button>
+      </form>
+      <div class="text-align-center">
+        <a class="center" href="/one/history">History</a>
+      </div>
+    </main>
+  </body>
+  <script src="/js/web3.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/payments.js"></script>
+</html>
