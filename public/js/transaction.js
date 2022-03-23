@@ -84,12 +84,6 @@
         return;
       }
       const { sig } = result;
-      const onError = (err, receipt) => {
-        errorSlot.innerHTML = `<p class="error text-align-center">An Error Occured While Sending The Transaction!</p>`;
-      };
-      const onReceipt = (receipt) => {
-        window.location.href = window.location.href;
-      };
       await withdraw(sig.v, sig.r, sig.s, id, twitterid, address);
     };
   }
