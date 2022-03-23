@@ -8,3 +8,5 @@ node_modules/
 npm-debug.log
 
 db.sqlite3
+
+todos.md
