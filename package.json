@@ -7,8 +7,8 @@
     "express",
     "passport"
   ],
-  "author": "Jared Hanson",
-  "license": "Unlicense",
+  "author": "StrawberryChocolateFudge",
+  "license": "",
   "homepage": "https://github.com/passport/express-4.x-twitter-example",
   "repository": {
     "type": "git",
@@ -22,21 +22,22 @@
     "test": "node ./test/testSign"
   },
   "dependencies": {
-    "axios": "^0.26.1",
-    "body-parser": "^1.19.0",
-    "connect-ensure-login": "^0.1.1",
-    "cookie-parser": "^1.3.5",
-    "cookie-session": "^2.0.0",
-    "dotenv": "^8.0.0",
-    "ejs": "^2.6.2",
-    "ethereumjs-abi": "^0.6.8",
-    "ethereumjs-util": "^6.2.1",
-    "express": "^4.17.1",
-    "helmet": "^5.0.2",
-    "morgan": "^1.9.1",
-    "passport": "^0.4.0",
-    "passport-twitter": "^1.0.4",
-    "sqlite3": "^5.0.2",
-    "web3": "^1.7.1"
+    "axios": "0.26.1",
+    "body-parser": "1.19.0",
+    "connect-ensure-login": "0.1.1",
+    "cookie-parser": "1.3.5",
+    "cookie-session": "2.0.0",
+    "ejs": "2.6.2",
+    "ethereumjs-abi": "0.6.8",
+    "ethereumjs-util": "6.2.1",
+    "express": "4.17.1",
+    "helmet": "5.0.2",
+    "morgan": "1.9.1",
+    "passport": "0.4.0",
+    "passport-twitter": "1.0.4",
+    "qrcode": "1.5.0",
+    "speakeasy": "2.0.0",
+    "sqlite3": "5.0.2",
+    "web3": "1.7.1"
   }
 }
