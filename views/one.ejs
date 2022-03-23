@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <title>Payments</title>
   </head>
-  <style></style>
   <body>
     <%- include('header'); -%>
 
@@ -29,27 +28,39 @@
         <input
           placeholder="@"
           id="twitterHandle"
-          class="max-width-300 center"
+          class="max-width-300 center borderRadius-25"
           type="text"
           required
           name="twitterHandle"
         />
         <label for="payamount" class="text-align-center"
-          >Transfer Amount:
+          >Amount: <small>(Max value 500$)</small>
         </label>
         <input
           placeholder="ONE"
           id="payamount"
-          class="max-width-300 center"
+          class="max-width-300 center borderRadius-25"
           type="number"
+          step="any"
           name="amount"
           required
         />
-        <slot id="errorSlot"></slot>
-        <button type="submit" class="max-width-300 center">PAY</button>
+        <label for="2faCode" class="text-align-center">Auth Code: </label>
+        <input
+          placeholder="0"
+          id="2faCode"
+          class="max-width-300 center borderRadius-25"
+          type="number"
+          name="code"
+          required
+        />
+        <div id="errorSlot"></div>
+        <button type="submit" class="max-width-300 center borderRadius-25">
+          PAY
+        </button>
       </form>
       <div class="text-align-center">
-        <a class="center" href="/one/history">History</a>
+        <a class="center" href="/one/history?sent=0&recieved=0">History</a>
       </div>
     </main>
   </body>
