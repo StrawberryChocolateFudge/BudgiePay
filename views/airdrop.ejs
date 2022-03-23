@@ -39,14 +39,20 @@
             <h4>You have <%=followerscount %> Followers !</h4>
             <h4>Claim your Budgie Coins!</h4>
           </hgroup>
+          <input
+            class="max-width-300 center borderRadius-25"
+            id="2fa-code"
+            type="number"
+            placeholder="Auth Code"
+            required
+          />
+          <div id="errorSlot"></div>
 
           <button
+            type="submit"
             data-budgiecoinaddress="<%=budgiecoinaddress%>"
-            data-signedargs="<%=signedargs%>"
-            data-walletconnected="<%=walletconnected%>"
-            data-signature="<%=signature%>"
             id="withdrawButton"
-            class="airdropButton"
+            class="airdropButton borderRadius-25"
           >
             <%=buttonMessage %>
           </button>
@@ -55,7 +61,8 @@
       </div>
     </main>
   </body>
-  <script src=/js/web3.min.js"></script>
+
+  <script src="/js/web3.min.js"></script>
   <script src="/js/main.js"></script>
   <script src="/js/airdrop.js"></script>
 </html>
