@@ -1,6 +1,6 @@
 const Web3 = require("web3");
 const { budgeCoinAbi, paymentsAbi } = require("./abi");
-const { keccak256 } = require("ethereumjs-util");
+const { keccak256, bufferToHex } = require("ethereumjs-util");
 
 let web3;
 
@@ -35,7 +35,8 @@ async function getPaymentById(id) {
 }
 
 async function hashTwitterId(twitterId) {
-  return keccak256(Buffer.from(twitterId));
+  const buff = keccak256(Buffer.from(twitterId));
+  return bufferToHex(buff);
 }
 
 module.exports = {
