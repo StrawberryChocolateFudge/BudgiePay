@@ -10,26 +10,37 @@
   const sentSummary = document.getElementById("sent-summary");
   const sentCount = document.getElementById("sent-count");
 
+  const paymentContractAddress = main.dataset.paymentcontractaddress;
+  const currency = main.dataset.currency;
+  const twitterId = main.dataset.twitterid;
+
   const web3 = getWeb3();
   await requestAccounts();
   const address = await getAddress();
   const artifact = await (await fetch("/js/Payments.json")).text();
   const abi = JSON.parse(artifact).abi;
-  const paymentContractAddress = main.dataset.paymentcontractaddress;
-  const currency = main.dataset.currency;
+
   const contract = new web3.eth.Contract(abi, paymentContractAddress);
+
   let recievedInterval;
   let sentInterval;
   const intervalTime = 1000;
+
+  const PAGESIZE = 5;
+
+  const queryParams = parseQueryString(window.location.search.slice(1));
+  const recievedIds = await getRecievedIds(twitterId);
+  const sentIds = await getSentIds(twitterId);
+  const recievedTotalPages = getTotalPages(recievedIds, PAGESIZE);
+  const sentTotalPages = getTotalPages(sentIds, PAGESIZE);
+
   recievedDetails.onclick = async function (e) {
     // The open property gets set after clicking, so I have to handle it the opposite way
     if (!recievedDetails.open) {
       const path = e.composedPath();
       if (path.includes(recievedSummary)) {
-        const twitterId = main.dataset.twitterid;
-        const ids = await getRecievedIds(twitterId);
-        renderTable(ids, recievedContent, "recieved");
-        recievedCount.innerHTML = ` (${ids.length})`;
+        renderTable(recievedIds, recievedContent, "recieved");
+        recievedCount.innerHTML = ` (${recievedIds.length})`;
       }
     } else {
       const path = e.composedPath();
@@ -44,10 +55,8 @@
     if (!sentDetails.open) {
       const path = e.composedPath();
       if (path.includes(sentSummary)) {
-        const twitterId = main.dataset.twitterid;
-        const ids = await getSentIds(twitterId);
-        sentCount.innerHTML = ` (${ids.length})`;
-        renderTable(ids, sentContent, "sent");
+        sentCount.innerHTML = ` (${sentIds.length})`;
+        renderTable(sentIds, sentContent, "sent");
       }
     } else {
       const path = e.composedPath();
@@ -80,6 +89,9 @@
       to.appendChild(table);
       const row = setUpRow();
       table.appendChild(row);
+
+      // getIdsForPage(type, ids);
+
       let i = ids.length - 1;
 
       if (type === "sent") {
@@ -172,4 +184,63 @@
   async function getPaymentById(id) {
     return await contract.methods.getPaymentById(id).call({ from: address });
   }
+
+  //TODO:
 })();
+function getIdsForPage(type, ids) {
+  const totalPages = getTotalPages(ids.length);
+  console.log(totalPages);
+  if (type === "sent") {
+  } else {
+  }
+}
+
+const getTotalPages = (length, pageSize) => {
+  if (length === 0) {
+    return 1;
+  }
+  const divided = length / pageSize;
+  const split = divided.toString().split(".");
+
+  if (split[0] === 0) {
+    return 1;
+  }
+
+  if (split[1] === undefined) {
+    return parseInt(split[0]);
+  }
+
+  return parseInt(split[0]) + 1;
+};
+
+function parseQueryString(query, groupByName) {
+  var parsed, hasOwn, pairs, pair, name, value;
+  if (typeof query != "string") {
+    throw "Invalid input";
+  }
+  parsed = {};
+  hasOwn = parsed.hasOwnProperty;
+  query = query.replace(/\+/g, " ");
+  pairs = query.split(/[&;]/);
+
+  for (var i = 0; i < pairs.length; i++) {
+    pair = pairs[i].match(/^([^=]*)=?(.*)/);
+    if (pair[1]) {
+      try {
+        name = decodeURIComponent(pair[1]);
+        value = decodeURIComponent(pair[2]);
+      } catch (e) {
+        throw "Invaid %-encoded sequence";
+      }
+
+      if (!groupByName) {
+        parsed[name] = value;
+      } else if (hasOwn.call(parsed, name)) {
+        parsed[name].push(value);
+      } else {
+        parsed[name] = [value];
+      }
+    }
+  }
+  return parsed;
+}
