@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/stylesheets/pico.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>QRCode</title>
+  </head>
+  <body>
+    <%- include('header'); -%>
+    <main>
+      <hgroup>
+        <h3 class="text-align-center">2FA</h3>
+        <h5 class="text-align-center">
+          Scan the QR Code with Google Authenticator.
+        </h5>
+      </hgroup>
+      <div class="text-align-center">
+        <img src="<%=qrcode %>" />
+      </div>
+      <form action="/2fa" method="post">
+        <button class="width-200 center borderRadius-25">Got It!</button>
+      </form>
+    </main>
+  </body>
+</html>
