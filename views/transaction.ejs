@@ -17,7 +17,7 @@
       data-chainid="<%=chainid %>"
       data-paymentcontractaddress="<%=paymentcontractaddress %>"
       data-id="<%=id %>"
-      data-userid="<%=userid %>"
+      data-twitterid="<%=twitterid %>"
     >
       <hgroup class="text-align-center">
         <h4 class="text-align-center">Transaction</h4>
@@ -25,13 +25,23 @@
       <% if (invalid) { %>
       <article><p class="text-align-center">Not Found</p></article>
       <%} else { %> <% if (finished) {%>
-      <article><p><%=finishedMessage %></p></article>
+      <article><p class="text-align-center"><%=finishedMessage %></p></article>
       <%} else {%>
       <article>
-        <p class="text-align-center"><%=amount %> <%=currency %></p>
+        <h3 class="text-align-center"><%=amount %> <%=currency %></h3>
+        <input
+          id="2fa-code"
+          class="max-width-300 center borderRadius-25"
+          type="text"
+          placeholder="Auth Code"
+        />
         <% if (refund) { %>
+        <div id="errorSlot"></div>
+        <p class="text-align-center">0.2% Fee</p>
         <button id="refund-button" class="max-width-200 center">Refund</button>
         <% } %> <% if (withdraw) { %>
+        <div id="errorSlot"></div>
+        <p class="text-align-center">0.2% Fee</p>
         <button id="withdraw-button" class="max-width-200 center">
           Withdraw
         </button>
