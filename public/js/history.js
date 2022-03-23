@@ -1,14 +1,18 @@
 (async function init() {
-  const main = document.getElementById("history");
-  const recievedDetails = document.getElementById("recieved-details");
-  const recievedContent = document.getElementById("recieved-details-content");
-  const recievedSummary = document.getElementById("recieved-summary");
-  const recievedCount = document.getElementById("recieved-count");
+  const queryParams = parseQueryString(window.location.search.slice(1));
 
-  const sentDetails = document.getElementById("sent-details");
+  if (queryParams.sent < 0 || queryParams.received < 0) {
+    location.href = location.origin + location.pathname + "?sent=0&received=0";
+    return;
+  }
+
+  const main = document.getElementById("history");
+  const receivedContent = document.getElementById("received-details-content");
+  const receivedCount = document.getElementById("received-count");
+  const receivedButtonsContainer = document.getElementById("received-buttons");
   const sentContent = document.getElementById("sent-details-content");
-  const sentSummary = document.getElementById("sent-summary");
   const sentCount = document.getElementById("sent-count");
+  const sentButtonsContainer = document.getElementById("sent-buttons");
 
   const paymentContractAddress = main.dataset.paymentcontractaddress;
   const currency = main.dataset.currency;
@@ -19,60 +23,79 @@
   const address = await getAddress();
   const artifact = await (await fetch("/js/Payments.json")).text();
   const abi = JSON.parse(artifact).abi;
-
   const contract = new web3.eth.Contract(abi, paymentContractAddress);
-
-  let recievedInterval;
-  let sentInterval;
-  const intervalTime = 1000;
 
   const PAGESIZE = 5;
 
-  const queryParams = parseQueryString(window.location.search.slice(1));
-  const recievedIds = await getRecievedIds(twitterId);
+  const receivedIds = await getreceivedIds(twitterId);
+  receivedIds.reverse();
   const sentIds = await getSentIds(twitterId);
-  const recievedTotalPages = getTotalPages(recievedIds, PAGESIZE);
-  const sentTotalPages = getTotalPages(sentIds, PAGESIZE);
+  sentIds.reverse();
+  const receivedTotalPages = getTotalPages(receivedIds.length, PAGESIZE);
+  const sentTotalPages = getTotalPages(sentIds.length, PAGESIZE);
+  if (
+    queryParams.sent > sentTotalPages - 1 ||
+    queryParams.received > receivedTotalPages - 1
+  ) {
+    location.href = location.origin + location.pathname + "?sent=0&received=0";
+    return;
+  }
 
-  recievedDetails.onclick = async function (e) {
-    // The open property gets set after clicking, so I have to handle it the opposite way
-    if (!recievedDetails.open) {
-      const path = e.composedPath();
-      if (path.includes(recievedSummary)) {
-        renderTable(recievedIds, recievedContent, "recieved");
-        recievedCount.innerHTML = ` (${recievedIds.length})`;
+  await renderTable(receivedIds, receivedContent, "received");
+  renderButton(
+    receivedTotalPages,
+    queryParams.received,
+    "received",
+    receivedButtonsContainer
+  );
+  receivedCount.innerHTML = ` (${receivedIds.length})`;
+  sentCount.innerHTML = ` (${sentIds.length})`;
+  await renderTable(sentIds, sentContent, "sent");
+  renderButton(sentTotalPages, queryParams.sent, "sent", sentButtonsContainer);
+
+  function renderButton(totalPages, currentPages, type, to) {
+    const aElements = { next: null, prev: null };
+    if (totalPages > 1) {
+      if (currentPages >= 0 && currentPages != totalPages - 1) {
+        //render a next button
+        const a = document.createElement("a");
+        let params;
+        if (type === "sent") {
+          params = `?sent=${parseInt(queryParams.sent) + 1}&received=${
+            queryParams.received
+          }`;
+        } else {
+          params = `?sent=${queryParams.sent}&received=${
+            parseInt(queryParams.received) + 1
+          }`;
+        }
+        a.href = location.origin + location.pathname + params;
+        a.textContent = "NEXT";
+        aElements.next = a;
       }
-    } else {
-      const path = e.composedPath();
-      if (!path.includes(recievedContent) && path.includes(recievedSummary)) {
-        recievedCount.innerHTML = "";
-        removeTable(recievedContent, "recieved");
+
+      if (currentPages >= 1) {
+        const a = document.createElement("a");
+        let params;
+        if (type === "sent") {
+          params = `?sent=${parseInt(queryParams.sent) - 1}&received=${
+            queryParams.received
+          }`;
+        } else {
+          params = `?sent=${queryParams.sent}&received=${
+            parseInt(queryParams.received) - 1
+          }`;
+        }
+        a.href = location.origin + location.pathname + params;
+        a.textContent = "PREV";
+        aElements.prev = a;
       }
     }
-  };
-
-  sentDetails.onclick = async function (e) {
-    if (!sentDetails.open) {
-      const path = e.composedPath();
-      if (path.includes(sentSummary)) {
-        sentCount.innerHTML = ` (${sentIds.length})`;
-        renderTable(sentIds, sentContent, "sent");
-      }
-    } else {
-      const path = e.composedPath();
-      if (!path.includes(sentContent) && path.includes(sentSummary)) {
-        sentCount.innerHTML = "";
-        removeTable(sentContent, "sent");
-      }
+    if (aElements.prev !== null) {
+      to.appendChild(aElements.prev);
     }
-  };
-
-  function removeTable(to, type) {
-    to.innerHTML = "";
-    if (type === "sent") {
-      clearInterval(sentInterval);
-    } else {
-      clearInterval(recievedInterval);
+    if (aElements.next !== null) {
+      to.appendChild(aElements.next);
     }
   }
 
@@ -89,57 +112,61 @@
       to.appendChild(table);
       const row = setUpRow();
       table.appendChild(row);
-
-      // getIdsForPage(type, ids);
-
-      let i = ids.length - 1;
-
+      const idsForPage = getIdsForPage(ids, PAGESIZE);
       if (type === "sent") {
-        sentInterval = setInterval(async () => {
-          const id = ids[i];
-          await intervalAction(i, id, table);
-          if (i > 0) {
-            i--;
-          } else {
-            clearInterval(sentInterval);
-          }
-        }, intervalTime);
+        const sent = idsForPage[queryParams.sent];
+        await fetchPage(sent, table);
       } else {
-        recievedInterval = setInterval(async () => {
-          const id = ids[i];
-          await intervalAction(i, id, table);
-          if (i > 0) {
-            i--;
-          } else {
-            clearInterval(recievedInterval);
-          }
-        }, intervalTime);
+        const received = idsForPage[queryParams.received];
+        await fetchPage(received, table);
       }
     }
   }
 
-  async function intervalAction(i, id, table) {
-    const payment = await getPaymentById(id);
-    const row = document.createElement("tr");
-    row.insertCell(0);
-    row.insertCell(1);
-    row.insertCell(2);
-    row.insertCell(3);
-    row.cells[0].textContent = i + 1;
-    row.cells[1].textContent =
-      Web3.utils.fromWei(payment.amount) + " " + currency;
-    row.cells[2].textContent = handleBool(payment.claimed);
-    row.cells[3].textContent = handleBool(payment.refunded);
-    row.onclick = () => {
-      onRowClick(payment.id);
-    };
+  async function fetchPage(ids, table) {
+    const checkedIds = ids.slice();
+    if (checkedIds.length !== 5) {
+      for (let i = checkedIds.length; i < 5; i++) {
+        checkedIds.push("0");
+      }
+    }
+    const payments = await getPaymentsPaginated(
+      checkedIds[0],
+      checkedIds[1],
+      checkedIds[2],
+      checkedIds[3],
+      checkedIds[4]
+    );
+    addRow(payments[0], table);
+    addRow(payments[1], table);
+    addRow(payments[2], table);
+    addRow(payments[3], table);
+    addRow(payments[4], table);
+  }
 
-    table.appendChild(row);
+  async function addRow(payment, table) {
+    if (payment.initialized) {
+      const row = document.createElement("tr");
+      row.insertCell(0);
+      row.insertCell(1);
+      row.insertCell(2);
+      row.insertCell(3);
+      row.cells[0].textContent = payment.id;
+      row.cells[1].textContent =
+        Web3.utils.fromWei(payment.amount) + " " + currency;
+      row.cells[2].textContent = handleBool(payment.claimed);
+      row.cells[3].textContent = handleBool(payment.refunded);
+      row.onclick = () => {
+        onRowClick(payment.id);
+      };
+
+      table.appendChild(row);
+    }
   }
 
   function onRowClick(id) {
-    window.location.href =
-      window.location.origin +
+    location.href =
+      location.origin +
       "/" +
       currency.toLowerCase() +
       "/transaction" +
@@ -154,7 +181,7 @@
     row.insertCell(2);
     row.insertCell(3);
 
-    row.cells[0].textContent = "";
+    row.cells[0].textContent = "ID";
     row.cells[1].textContent = "SENT";
     row.cells[2].textContent = "CLAIMED";
     row.cells[3].textContent = "REFUNDED";
@@ -175,7 +202,7 @@
       .call({ from: address });
   }
 
-  async function getRecievedIds(twitterId) {
+  async function getreceivedIds(twitterId) {
     return await contract.methods
       .getPaymentIdsTo(twitterId)
       .call({ from: address });
@@ -184,15 +211,28 @@
   async function getPaymentById(id) {
     return await contract.methods.getPaymentById(id).call({ from: address });
   }
-
-  //TODO:
-})();
-function getIdsForPage(type, ids) {
-  const totalPages = getTotalPages(ids.length);
-  console.log(totalPages);
-  if (type === "sent") {
-  } else {
+  async function getPaymentsPaginated(first, second, third, fourth, fifth) {
+    return await contract.methods
+      .getPaymentsPaginated(first, second, third, fourth, fifth)
+      .call({ from: address });
   }
+})();
+
+function getIdsForPage(ids, pageSize) {
+  const totalPages = getTotalPages(ids.length, pageSize);
+  const pages = [];
+  for (let i = 0; i < totalPages; i++) {
+    const firstIndex = (i + 1) * pageSize - pageSize;
+    const lastIndex = (i + 1) * pageSize;
+    const content = [];
+    for (let j = firstIndex; j < lastIndex; j++) {
+      if (ids[j] !== undefined) {
+        content.push(ids[j]);
+      }
+    }
+    pages.push(content);
+  }
+  return pages;
 }
 
 const getTotalPages = (length, pageSize) => {
@@ -205,11 +245,9 @@ const getTotalPages = (length, pageSize) => {
   if (split[0] === 0) {
     return 1;
   }
-
   if (split[1] === undefined) {
     return parseInt(split[0]);
   }
-
   return parseInt(split[0]) + 1;
 };
 
