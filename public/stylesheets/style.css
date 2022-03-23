@@ -99,6 +99,13 @@ tr:hover {
 .width-50 {
   width: 50px;
 }
+.width-200 {
+  width: 200px;
+}
+
+.borderRadius-25 {
+  border-radius: 25px;
+}
 
 /* Global CSS variables */
 :root {
