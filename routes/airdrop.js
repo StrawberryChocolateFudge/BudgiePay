@@ -9,6 +9,7 @@ const web3 = require("../web3/web3");
 const getWithdrawnAlready = web3.getWithdrawnAlready;
 const { fetchfollowers } = require("../fetch/fetch");
 const { signAirdrop } = require("../web3/sign");
+const speakeasy = require("speakeasy");
 
 /* GET airdrop. */
 // This route shows account information of the logged in user. They can claim their Airdrop
@@ -27,46 +28,81 @@ router.get("/", ensureLoggedIn(), async function (req, res, next) {
         const response = await fetchfollowers(row.subject);
         let followerscount = response.data.followers_count;
 
-        let buttonMessage;
-        let signature = "";
-        let walletconnected = false;
-        let address = "";
-        if (req.query.address === undefined) {
-          buttonMessage = `Connect your wallet!`;
-        } else {
-          address = req.query.address;
-          buttonMessage = `Withdraw ${followerscount} tokens`;
-          signature = signAirdrop(
-            row.subject,
-            followerscount,
-            address,
-            process.env["CHAINID"],
-            process.env["TOKENADDRESS"],
-            process.env["PRIVATEKEY"]
-          );
-          signature = {
-            r: ethUtil.bufferToHex(signature.r),
-            s: ethUtil.bufferToHex(signature.s),
-            v: signature.v,
-          };
-          walletconnected = true;
-        }
+        const buttonMessage = `Withdraw ${followerscount} tokens`;
+
         res.render("airdrop", {
           user: req.user,
           budgiecoinaddress: process.env["TOKENADDRESS"],
           withdrawn,
           followerscount,
-          walletconnected,
           buttonMessage,
-          signature: JSON.stringify(signature),
-          signedargs: JSON.stringify({
-            twitterid: row.subject,
-            followerscount,
-            address,
-          }),
         });
       } catch (err) {
         return next(err);
+      }
+    }
+  );
+});
+
+router.post("/", ensureLoggedIn(), async function (req, res, next) {
+  const { address, code } = req.body;
+
+  db.get(
+    "SELECT * from two_fa WHERE user_id = ?",
+    [req.user.id],
+    async function (err, row) {
+      if (err) {
+        return next(err);
+      }
+
+      const verified = speakeasy.totp.verify({
+        secret: row.secret,
+        encoding: "ascii",
+        token: code,
+      });
+
+      if (!verified) {
+        return res.json({ json: true, errorMessage: "Invalid Auth Code" });
+      } else {
+        db.get(
+          "SELECT * FROM federated_credentials WHERE user_id = ?",
+          [req.user.id],
+          async function (err, row2) {
+            if (err) {
+              return next(err);
+            }
+            const withdrawn = await getWithdrawnAlready(row2.subject);
+            const response = await fetchfollowers(row2.subject);
+            let followerscount = response.data.followers_count;
+
+            if (withdrawn) {
+              return res.json({
+                error: true,
+                errorMessage: "Already withdrawn the Airdrop.",
+              });
+            } else {
+              let signature = signAirdrop(
+                row2.subject,
+                followerscount,
+                address,
+                process.env["CHAINID"],
+                process.env["TOKENADDRESS"],
+                process.env["PRIVATEKEY"]
+              );
+              signature = {
+                r: ethUtil.bufferToHex(signature.r),
+                s: ethUtil.bufferToHex(signature.s),
+                v: signature.v,
+              };
+              const signedargs = {
+                twitterid: row2.subject,
+                followerscount,
+                address,
+              };
+              return res.json({ signature, signedargs });
+            }
+          }
+        );
       }
     }
   );
