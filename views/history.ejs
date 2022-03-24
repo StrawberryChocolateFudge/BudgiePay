@@ -16,20 +16,22 @@
       data-twitterid="<%=twitterId %>"
       data-paymentcontractaddress="<%=paymentcontractaddress %>"
       data-currency="ONE"
+      data-rpc="<%=rpc %>"
     >
       <hgroup>
         <h3 class="text-align-center">History</h3>
       </hgroup>
-      <details id="recieved-details">
-        <summary id="recieved-summary">
-          Recieved <span id="recieved-count"></span>
-        </summary>
-        <div id="recieved-details-content"></div>
-      </details>
-      <details id="sent-details">
-        <summary id="sent-summary">Sent <span id="sent-count"></span></summary>
+      <article>
+        <h3 id="received-summary">
+          Received <span id="received-count"></span>
+        </h3>
+        <div id="received-details-content"></div>
+        <div id="received-buttons" class="rowAround"></div>
+        <hr />
+        <h3 id="sent-summary">Sent <span id="sent-count"></span></h3>
         <div id="sent-details-content"></div>
-      </details>
+        <div id="sent-buttons" class="rowAround"></div>
+      </article>
     </main>
   </body>
   <script src="/js/web3.min.js"></script>
