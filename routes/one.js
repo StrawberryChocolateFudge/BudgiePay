@@ -199,7 +199,7 @@ router.post(
           db.get(
             "SELECT * from federated_credentials WHERE user_id = ?",
             [req.user.id],
-            async function (error, row) {
+            async function (error, row2) {
               if (error) {
                 next(error);
               }
@@ -214,7 +214,7 @@ router.post(
               }
               const sig = await signRefund(
                 id,
-                row.subject,
+                row2.subject,
                 address,
                 process.env["CHAINID"],
                 process.env["PAYMENTCONTRACTADDRESS"],
