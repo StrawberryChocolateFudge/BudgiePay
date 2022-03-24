@@ -16,6 +16,7 @@ router.get("/", ensureLoggedIn(), async function (req, res, next) {
     user: req.user,
     error: false,
     contractaddress: process.env["PAYMENTCONTRACTADDRESS"],
+    currency: "one",
   });
 });
 
@@ -107,6 +108,7 @@ router.get("/history", ensureLoggedIn(), async function (req, res, next) {
         user: req.user,
         twitterId: row.subject,
         paymentcontractaddress: process.env["PAYMENTCONTRACTADDRESS"],
+        rpc: process.env["RPC"],
       });
     }
   );
