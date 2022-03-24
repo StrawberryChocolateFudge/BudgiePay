@@ -19,9 +19,6 @@
       data-id="<%=id %>"
       data-twitterid="<%=twitterid %>"
     >
-      <hgroup class="text-align-center">
-        <h4 class="text-align-center">Transaction</h4>
-      </hgroup>
       <% if (invalid) { %>
       <article><p class="text-align-center">Not Found</p></article>
       <%} else { %> <% if (finished) {%>
@@ -29,17 +26,24 @@
       <%} else {%>
       <article>
         <h3 class="text-align-center"><%=amount %> <%=currency %></h3>
+
+        <% if (refund) { %>
         <input
           id="2fa-code"
           class="max-width-300 center borderRadius-25"
           type="text"
           placeholder="Auth Code"
         />
-        <% if (refund) { %>
         <div id="errorSlot"></div>
         <p class="text-align-center">0.2% Fee</p>
         <button id="refund-button" class="max-width-200 center">Refund</button>
         <% } %> <% if (withdraw) { %>
+        <input
+          id="2fa-code"
+          class="max-width-300 center borderRadius-25"
+          type="text"
+          placeholder="Auth Code"
+        />
         <div id="errorSlot"></div>
         <p class="text-align-center">0.2% Fee</p>
         <button id="withdraw-button" class="max-width-200 center">
