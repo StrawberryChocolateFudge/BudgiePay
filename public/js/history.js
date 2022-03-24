@@ -182,7 +182,7 @@
     row.insertCell(3);
 
     row.cells[0].textContent = "ID";
-    row.cells[1].textContent = "SENT";
+    row.cells[1].textContent = "AMOUNT";
     row.cells[2].textContent = "CLAIMED";
     row.cells[3].textContent = "REFUNDED";
     return row;
