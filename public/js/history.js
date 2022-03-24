@@ -21,6 +21,9 @@
   const web3 = getWeb3();
   await requestAccounts();
   const address = await getAddress();
+
+  await switchToHarmony("Testnet");
+
   const artifact = await (await fetch("/js/Payments.json")).text();
   const abi = JSON.parse(artifact).abi;
   const contract = new web3.eth.Contract(abi, paymentContractAddress);

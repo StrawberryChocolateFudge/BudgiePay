@@ -10,6 +10,8 @@
   const artifact = await (await fetch("/js/BudgieCoin.json")).text();
   const abi = JSON.parse(artifact).abi;
   const address = await getAddress();
+  await switchToHarmony("Testnet");
+
   const twoFaEl = document.getElementById("2fa-code");
 
   if (withdrawBttn !== null) {
@@ -56,28 +58,6 @@
     // We recommend reloading the page unless you have good reason not to.
     window.location.reload();
   });
-
-  async function verifySignature(
-    signedargs,
-    signature,
-    contractaddress,
-    abi,
-    address
-  ) {
-    const web3 = new Web3(window.ethereum);
-    const contract = new web3.eth.Contract(abi, contractaddress);
-    const res = await contract.methods
-      .verifySignature(
-        signature.v,
-        signature.r,
-        signature.s,
-        signedargs.twitterid,
-        signedargs.followerscount,
-        signedargs.address
-      )
-      .call({ from: address });
-    return res;
-  }
 
   async function mintbudgiecoin(
     signedargs,

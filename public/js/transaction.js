@@ -9,6 +9,8 @@
   }
   await requestAccounts();
   let address = await getAddress();
+  await switchToHarmony("Testnet");
+
   const artifact = await (await fetch("/js/Payments.json")).text();
   const abi = JSON.parse(artifact).abi;
   const web3 = new Web3(window.ethereum);
@@ -34,12 +36,8 @@
       .on("error", onError)
       .on("receipt", onReceipt);
   }
-  const chain = main.dataset.chain;
   const id = main.dataset.id;
   const twitterid = main.dataset.twitterid;
-  if (chain === "HARMONY") {
-    //TODO: switch to harmony network
-  }
 
   const refundButton = document.getElementById("refund-button");
   const withdrawButton = document.getElementById("withdraw-button");

@@ -11,19 +11,18 @@
   }
   await requestAccounts();
   const address = await getAddress();
+  await switchToHarmony("Testnet");
+
   const artifact = await (await fetch("/js/Payments.json")).text();
   const abi = JSON.parse(artifact).abi;
   const web3 = new Web3(window.ethereum);
+
   const contract = new web3.eth.Contract(abi, contractAddress);
 
   payForm.onsubmit = async (e) => {
     e.preventDefault();
 
     errorSlot.innerHTML = "";
-
-    if (chain === "HARMONY") {
-      // await switchToHarmony("Testnet");
-    }
 
     let twitterHandle = document.getElementById("twitterHandle").value;
 
