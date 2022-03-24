@@ -21,6 +21,7 @@
         id="payForm"
         data-chain="HARMONY"
         data-contractaddress="<%= contractaddress %>"
+        data-currency="<%=currency %>"
       >
         <label for="twitterHandle" class="text-align-center"
           >Transfer to Twitter Handle:</label
@@ -54,7 +55,7 @@
           name="code"
           required
         />
-        <div id="errorSlot"></div>
+        <div id="errorSlot" class="text-align-center"></div>
         <button type="submit" class="max-width-300 center borderRadius-25">
           PAY
         </button>
