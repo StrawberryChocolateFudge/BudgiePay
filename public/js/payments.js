@@ -3,6 +3,8 @@
   const errorSlot = document.getElementById("errorSlot");
   const chain = payForm.dataset.chain;
   const contractAddress = payForm.dataset.contractaddress;
+  const currency = payForm.dataset.currency;
+
   if (window.ethereum === undefined) {
     window.open("https://metamask.io/", "_blank");
     return;
@@ -57,10 +59,19 @@
       errorSlot.innerHTML = `<p class="error text-align-center">An Error Occured While Sending The Transaction!</p>`;
     };
     const onReceipt = (receipt) => {
-      errorSlot.innerHTML = `<p class="text-align-center">Payment Sent!</p>`;
+      const events = receipt.events;
+      const Pay = events.Pay;
+      const returnValues = Pay.returnValues;
+      const tweet = composeTweet(
+        twitterHandle,
+        returnValues[0],
+        amount,
+        currency
+      );
+      const a = createNewAnchor(tweet);
+      errorSlot.appendChild(a);
     };
     await payEth(
-      contractAddress,
       sig.v,
       sig.r,
       sig.s,
@@ -73,8 +84,28 @@
     );
   };
 
+  function composeTweet(twitterHandle, paymentId, amount, currency) {
+    const txUri = encodeURI(
+      `${location.origin}/${currency}/transaction?tx=${paymentId}`
+    );
+
+    const uri = `https://twitter.com/intent/tweet?text=Payment of ${amount} ${currency.toUpperCase()} with Budgie Pay to @${twitterHandle}&url=${txUri}`;
+    const twitterText = encodeURI(uri);
+    return twitterText;
+  }
+
+  function createNewAnchor(tweetURL) {
+    const a = document.createElement("a");
+    a.href = tweetURL;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.text = "Payment Sent. Tweet about it!";
+    a.classList.add("text-align-center");
+    a.classList.add("marginBottom-20");
+    return a;
+  }
+
   async function payEth(
-    contractAddress,
     v,
     r,
     s,
