@@ -88,7 +88,7 @@ router.post("/", ensureLoggedIn(), async function (req, res, next) {
                 address,
                 process.env["CHAINID"],
                 process.env["TOKENADDRESS"],
-                process.env["PRIVATEKEY"]
+                process.env["HARMONYKEY"]
               );
               signature = {
                 r: ethUtil.bufferToHex(signature.r),

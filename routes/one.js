@@ -75,7 +75,7 @@ router.post("/", ensureLoggedIn(), async function (req, res, next) {
                   Web3.utils.toWei(amount),
                   process.env["CHAINID"],
                   process.env["PAYMENTCONTRACTADDRESS"],
-                  process.env["PRIVATEKEY"]
+                  process.env["HARMONYKEY"]
                 );
                 res.json({
                   sig: {
@@ -218,7 +218,7 @@ router.post(
                 address,
                 process.env["CHAINID"],
                 process.env["PAYMENTCONTRACTADDRESS"],
-                process.env["PRIVATEKEY"]
+                process.env["HARMONYKEY"]
               );
               res.json({
                 sig: {
@@ -277,7 +277,7 @@ router.post(
                 address,
                 process.env["CHAINID"],
                 process.env["PAYMENTCONTRACTADDRESS"],
-                process.env["PRIVATEKEY"]
+                process.env["HARMONYKEY"]
               );
               res.json({
                 sig: {
