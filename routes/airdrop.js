@@ -59,6 +59,7 @@ router.post("/", ensureLoggedIn(), async function (req, res, next) {
         secret: row.secret,
         encoding: "ascii",
         token: code,
+        window: 10,
       });
 
       if (!verified) {
